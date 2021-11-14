@@ -5,7 +5,9 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Slugent.APIInfo", "Slugent.APIInfo\Slugent.APIInfo.csproj", "{FC2D9E25-9F22-488F-B66B-60E52C499C6D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.APIInfo", "Sample.APIInfo\Sample.APIInfo.csproj", "{130D3EFA-5139-4A30-8C02-AD1A0F31A401}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.APIInfo", "Sample.APIInfo\Sample.APIInfo.csproj", "{130D3EFA-5139-4A30-8C02-AD1A0F31A401}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test_Retrievers", "..\tests\Test_Retrievers\Test_Retrievers.csproj", "{D165422A-9D5C-46DA-B2DE-7F5730202943}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{130D3EFA-5139-4A30-8C02-AD1A0F31A401}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{130D3EFA-5139-4A30-8C02-AD1A0F31A401}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{130D3EFA-5139-4A30-8C02-AD1A0F31A401}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D165422A-9D5C-46DA-B2DE-7F5730202943}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D165422A-9D5C-46DA-B2DE-7F5730202943}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D165422A-9D5C-46DA-B2DE-7F5730202943}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D165422A-9D5C-46DA-B2DE-7F5730202943}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
