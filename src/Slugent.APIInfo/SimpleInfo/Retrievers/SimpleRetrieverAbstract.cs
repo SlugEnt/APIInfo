@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 [assembly: InternalsVisibleTo("Test.APIInfo")]
 
-namespace Slugent.APIInfo.SimpleInfo.Retrievers
+namespace SlugEnt.APIInfo
 {
 	public abstract class SimpleRetrieverAbstract
 	{

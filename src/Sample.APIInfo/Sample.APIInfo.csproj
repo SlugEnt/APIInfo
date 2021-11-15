@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Slugent.APIInfo\Slugent.APIInfo.csproj" />
+    <ProjectReference Include="..\Slugent.APIInfo\SlugEnt.APIInfo.csproj" />
   </ItemGroup>
 
 </Project>

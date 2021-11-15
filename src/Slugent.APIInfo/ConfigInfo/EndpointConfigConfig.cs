@@ -6,12 +6,8 @@ using System.Threading.Tasks;
 
 namespace SlugEnt.APIInfo
 {
-	/// <summary>
-	/// Provides for configuration of the Ping endpoint
-	/// </summary>
-	public class EndpointPingConfig {
+	public class EndpointConfigConfig
+	{
 		public bool Enabled { get; set; } = true;
 	}
-
-
 }

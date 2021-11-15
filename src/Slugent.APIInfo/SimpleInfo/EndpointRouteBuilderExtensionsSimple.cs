@@ -3,15 +3,15 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Slugent.APIInfo;
+using SlugEnt.APIInfo;
 
-namespace Slugent.APIInfo.SimpleInfo
+namespace SlugEnt.APIInfo
 {
 
     /// <summary>
     /// Provides extension methods for <see cref="IEndpointRouteBuilder"/> to add routes.
     /// </summary>
-    public static class EndpointRouteBuilderExtensions
+    public static partial class EndpointRouteBuilderExtensions
     {
         /// <summary>
         /// Adds a configuration endpoint to the <see cref="IEndpointRouteBuilder"/> for the ping info.
@@ -20,7 +20,7 @@ namespace Slugent.APIInfo.SimpleInfo
         /// <param name="pattern">The URL pattern of the endpoint.</param>
         /// <param name="optionsDelegate">The EndpointSimpleConfig object</param>
         /// <returns>A route for the endpoint.</returns>
-        public static IEndpointConventionBuilder? MapSimpleInfo(
+        public static IEndpointConventionBuilder? MapSlugEntSimpleInfo(
             this IEndpointRouteBuilder endpoints,
             Action<EndpointSimpleConfig>? optionsDelegate = default)
         {

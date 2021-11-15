@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.NetworkInformation;
-using Slugent.APIInfo.SimpleInfo.Retrievers;
+using SlugEnt.APIInfo;
 
 
 
-namespace Slugent.APIInfo.SimpleInfo.Providers
+namespace SlugEnt.APIInfo
 {
 	
 

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Slugent.APIInfo.SimpleInfo
+namespace SlugEnt.APIInfo
 {
 	public interface ISimpleInfoRetriever {
 		/// <summary>

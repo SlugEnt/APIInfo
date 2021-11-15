@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Slugent.APIInfo
+namespace SlugEnt.APIInfo
 {
 	public class APIInfoBase {
 		private const string ROOT_PATH = "info";

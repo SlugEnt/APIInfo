@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Slugent.APIInfo.SimpleInfo
+namespace SlugEnt.APIInfo
 {
 	/// <summary>
 	/// Provides for configuration of the Ping endpoint

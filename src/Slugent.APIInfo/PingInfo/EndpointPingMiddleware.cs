@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 
-namespace Slugent.APIInfo.PingInfo
+namespace SlugEnt.APIInfo
 {
 	/// <summary>
 	/// The actual code executed when the PingEndpoint is called.

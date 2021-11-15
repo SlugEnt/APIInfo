@@ -11,8 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Slugent.APIInfo.PingInfo;
-using Slugent.APIInfo.SimpleInfo;
+
+using SlugEnt.APIInfo;
 
 
 namespace Sample.APIInfo
@@ -57,8 +57,9 @@ namespace Sample.APIInfo
 			{
 				
 				endpoints.MapControllers();
-				endpoints.MapPing();
-				endpoints.MapSimpleInfo();
+				endpoints.MapSlugEntPing();
+				endpoints.MapSlugEntSimpleInfo();
+				endpoints.MapSlugEntConfig();
 			});
 		}
 	}

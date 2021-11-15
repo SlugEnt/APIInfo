@@ -7,9 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Slugent.APIInfo;
-using Slugent.APIInfo.SimpleInfo;
-using Slugent.APIInfo.SimpleInfo.Providers;
+using SlugEnt.APIInfo;
 
 namespace Sample.APIInfo
 {
@@ -29,6 +27,7 @@ namespace Sample.APIInfo
 
 					// Add a SimpleInfo retriever - Host Information
 					services.AddTransient<ISimpleInfoRetriever, SimpleRetrieverHostInfo>();
+					
 			    })
                .ConfigureWebHostDefaults(webBuilder =>
                {

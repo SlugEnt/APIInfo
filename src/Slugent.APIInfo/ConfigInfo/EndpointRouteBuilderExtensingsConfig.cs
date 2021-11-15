@@ -1,17 +1,19 @@
-﻿using System;
+﻿
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SlugEnt.APIInfo;
+using SlugEnt.APIInfo.ConfigInfo;
+
 
 namespace SlugEnt.APIInfo
 {
-
-    /// <summary>
+	/// <summary>
     /// Provides extension methods for <see cref="IEndpointRouteBuilder"/> to add routes.
     /// </summary>
-    public static partial class EndpointRouteBuilderExtensions
+    public static partial class EndpointRouteBuilderExtensings
     {
         /// <summary>
         /// Adds a configuration endpoint to the <see cref="IEndpointRouteBuilder"/> for the ping info.
@@ -20,20 +22,20 @@ namespace SlugEnt.APIInfo
         /// <param name="pattern">The URL pattern of the endpoint.</param>
         /// <param name="optionsDelegate">The EndpointPingConfig object</param>
         /// <returns>A route for the endpoint.</returns>
-        public static IEndpointConventionBuilder? MapSlugEntPing(
+        public static IEndpointConventionBuilder? MapSlugEntConfig(
             this IEndpointRouteBuilder endpoints,
             //string pattern =  "info/ping",
-            Action<EndpointPingConfig>? optionsDelegate = default)
+            Action<EndpointConfigConfig>? optionsDelegate = default)
         {
             if (endpoints == null) throw new ArgumentNullException(nameof(endpoints));
-            
-            APIInfoBase apiInfoBase = endpoints.ServiceProvider.GetRequiredService<APIInfoBase>();
-            string urlPattern = apiInfoBase.InfoRootPath + "/ping";
 
-            var options = new EndpointPingConfig();
+            APIInfoBase apiInfoBase = endpoints.ServiceProvider.GetRequiredService<APIInfoBase>();
+            string urlPattern = apiInfoBase.InfoRootPath + "/config";
+
+            var options = new EndpointConfigConfig();
             optionsDelegate?.Invoke(options);
 
-            return MapPingCore(endpoints, urlPattern, options);
+            return MapConfigCore(endpoints, urlPattern, options);
         }
 
 
@@ -44,19 +46,19 @@ namespace SlugEnt.APIInfo
         /// <param name="pattern">The URL Pattern the endpoint is at</param>
         /// <param name="options">The options for the endpoint</param>
         /// <returns></returns>
-        private static IEndpointConventionBuilder? MapPingCore(
+        private static IEndpointConventionBuilder? MapConfigCore(
             IEndpointRouteBuilder endpoints,
-            string pattern, EndpointPingConfig options)
+            string pattern, EndpointConfigConfig options)
         {
             var environment = endpoints.ServiceProvider.GetRequiredService<IHostEnvironment>();
             var builder = endpoints.CreateApplicationBuilder();
 
-            if (!options.Enabled )
+            if (!options.Enabled)
             {
                 return null;
             }
             var pipeline = builder
-                .UseMiddleware<EndpointPingMiddleware>()
+                .UseMiddleware<EndpointConfigMiddleware>()
                 .Build();
 
             return endpoints.Map(pattern, pipeline);
