@@ -5,8 +5,6 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SlugEnt.APIInfo;
-using SlugEnt.APIInfo.ConfigInfo;
-
 
 namespace SlugEnt.APIInfo
 {
