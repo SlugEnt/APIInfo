@@ -23,7 +23,12 @@ namespace Sample.APIInfo
 			    .ConfigureServices((hostContext, services) => {
 					// Set APIInfo Object and override the default root path to infotest...
 					APIInfoBase apiInfoBase = new ("infotest");
-					services.AddSingleton<APIInfoBase>(apiInfoBase);
+					apiInfoBase.AddConfigMatchCriteria("password",false,true);
+					apiInfoBase.AddConfigMatchCriteria("os", false, true);
+					apiInfoBase.AddConfigMatchCriteria("LogLevel", true, true);
+					apiInfoBase.AddConfigMatchCriteria("environment", false, false);
+
+					services.AddSingleton<IAPIInfoBase>(apiInfoBase);
 
 					// Add a SimpleInfo retriever - Host Information
 					services.AddTransient<ISimpleInfoRetriever, SimpleRetrieverHostInfo>();

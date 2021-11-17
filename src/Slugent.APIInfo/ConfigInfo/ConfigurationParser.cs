@@ -8,16 +8,53 @@ using Microsoft.Extensions.Configuration;
 
 namespace SlugEnt.APIInfo
 {
-	public class ConfigurationParser
-	{
+	/// Some of this code is inspired from an Andrew Lock article:  https://andrewlock.net/viewing-overriden-configuration-values-in-aspnetcore/
+	public class ConfigurationParser {
+		private const string HIDDEN = "**------------- HIDDEN VALUE ------------------------------**";
+
 		private IConfigurationRoot _configRoot;
+		private IAPIInfoBase _apiInfoBase;
 		private StringBuilder _htmlStringBuilder = new StringBuilder(4096);
 		private short _indentLevel = -1;
+		private short _hiddenConfigKeys = 0;
 
-		internal string DisplayConfig(IConfiguration config)
+		private short _hiddenConfigSections = 0;
+/*
+		/// <summary>
+		/// The Configuration object from application startup
+		/// </summary>
+		public IConfiguration Configuration { get; set; }
+
+
+		/// <summary>
+		/// The APIInfoBase object from application startup
+		/// </summary>
+		public IAPIInfoBase APIInfoBase { get; set; }
+*/
+
+
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		public ConfigurationParser (IConfiguration configuration, IAPIInfoBase apiInfoBase) {
+			_configRoot = configuration as ConfigurationRoot;
+			_apiInfoBase = apiInfoBase;
+		}
+
+
+		/// <summary>
+		/// Method that builds the HTML code that displays the list
+		/// </summary>
+		/// <param name="config"></param>
+		/// <param name="apiInfoBase"></param>
+		/// <returns></returns>
+		internal string DisplayConfig()
 		{
-			_configRoot = config as IConfigurationRoot;
+			//_configRoot = config as IConfigurationRoot;
+			
+			
 			RecurseChildren(_configRoot.GetChildren());
+			//RecurseChildren(_configRoot.GetChildren());
 
 			StringBuilder finalHtml = new StringBuilder(_htmlStringBuilder.Length + 300);
 			string header = @"
@@ -42,14 +79,39 @@ table {
 		}
 
 
-		internal void RecurseChildren(IEnumerable<IConfigurationSection> children) {
+		/// <summary>
+		/// Recurses the given Configuration section listing all children and further recursing down into child Sections.
+		/// </summary>
+		/// <param name="children">The configuration section to parse into</param>
+		/// <param name="hideValue">If true, then all config values, all config sections and all children keys will have their value hidden</param>
+		internal void RecurseChildren(IEnumerable<IConfigurationSection> children, bool hideValue = false) {
 			_indentLevel++;
+			bool hideChildrenOfSection = false;
 
-			IEnumerable<IConfigurationSection> sortedChildren = children.OrderByDescending(c => c.Value);
-			foreach (IConfigurationSection child in sortedChildren)
-			{
+			// We sort the children in descending order by the value.  This way all child values are displayed first then all the sections.
+			IEnumerable<IConfigurationSection> sortedChildren = children.OrderByDescending(c => c.Value).ThenBy(c => c.Key);
+			foreach (IConfigurationSection child in sortedChildren) {
+				bool hideChild = false;
+
 				// Get the child as well as all providers for whom the child key was overridden
-				Stack<(string Value, IConfigurationProvider Provider)> childStack = GetChildrenAndOverwrites(_configRoot, child.Path);
+				Stack<(string Value, IConfigurationProvider Provider)> childStack = GetChildrenAndOverwrites(child.Path);
+
+
+				// Need to go thru the config criteria we want to hide to see if the child matches.  If it does we skip it - including if it is a section match...
+				if (hideValue == true || _apiInfoBase.DoesConfigEntryMatch(child.Key))
+				{
+					if (childStack.Count ==0)
+						_hiddenConfigSections++;
+					else
+						_hiddenConfigKeys++;
+
+//					_htmlStringBuilder.Append("<pre>" + HIDDEN + "</pre>");
+//					continue;
+					hideChild = true;
+				}
+
+
+				
 
 				// Is a child section
 				if (childStack.Count == 0)
@@ -58,13 +120,19 @@ table {
 					string indentString = "";
 					if (spaceCount>0) indentString = new string(' ', spaceCount);
 					string rowString = indentString + "|--> " + child.Key + ":";
+					if ( hideChild ) {
+						rowString += "  " + "----- Section Hidden -----";
+						hideChildrenOfSection = true;
+					}
 					_htmlStringBuilder.Append("<pre>" + rowString + "</pre>");
+					
 				}
 
 				// Is a child value
 				else
 				{
 					var childValue = childStack.Pop();
+					string configValue = hideChild ? HIDDEN : childValue.Value;
 
 					// Write out this entry which is the current value for the key.
 					int spaceCount = (_indentLevel+1) * 2;
@@ -74,7 +142,7 @@ table {
 					// If there are overridden values then we list ALL the values on separate lines
 					string rowString = indentString + "|--: " + child.Key + ":  ";
 					if ( childStack.Count == 0 ) {
-						rowString += childValue.Value + "  [ " + childValue.Provider + " ]";
+						rowString += configValue + "  [ " + childValue.Provider + " ]";
 						_htmlStringBuilder.Append("<pre>" + rowString + "</pre>");
 					}
 					else {
@@ -84,30 +152,36 @@ table {
 						// Write current value
 						int newIndent = _indentLevel + 2;
 						indentString = new string(' ', newIndent*2);
-						rowString = "<pre>" + indentString + "  ** " + childValue.Value + "  [ " + childValue.Provider + " ] </pre>";
+						rowString = "<pre>" + indentString + "  ** " + configValue + "  [ " + childValue.Provider + " ] </pre>";
 						_htmlStringBuilder.Append( rowString);
 
 						// Loop thru all the over-ridden values of this key.
 						foreach (var overriddenValue in childStack)
 						{
 							int childSpaceCount = (_indentLevel + 1) * 2;
-							rowString = "<pre>" + indentString + "  -- " + overriddenValue.Value + "  [ " + overriddenValue.Provider + " ] </pre>";
+							configValue = hideChild ? HIDDEN : overriddenValue.Value;
+							rowString = "<pre>" + indentString + "  -- " + configValue + "  [ " + overriddenValue.Provider + " ] </pre>";
 							_htmlStringBuilder.Append(rowString);
 						}
 					}
 				}
-				RecurseChildren(child.GetChildren());
+				RecurseChildren(child.GetChildren(),hideChildrenOfSection);
 				_indentLevel--;
 			}
 			
 		}
 
-		internal static Stack<(string Value, IConfigurationProvider Provider)> GetChildrenAndOverwrites(
-			IConfigurationRoot root,
+
+		/// <summary>
+		/// Identifies all occurrences of the given key in all the configuration providers.
+		/// </summary>
+		/// <param name="key">The key searching for</param>
+		/// <returns></returns>
+		internal Stack<(string Value, IConfigurationProvider Provider)> GetChildrenAndOverwrites(
 			string key)
 		{
 			var stack = new Stack<(string, IConfigurationProvider)>();
-			foreach (IConfigurationProvider provider in root.Providers)
+			foreach (IConfigurationProvider provider in _configRoot.Providers)
 			{
 				if (provider.TryGet(key, out string value))
 				{

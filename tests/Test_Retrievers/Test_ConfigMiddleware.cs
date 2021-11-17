@@ -60,10 +60,12 @@ namespace Test_Retrievers
 			SetupConfiguration(builder);
 			OverrideConfiguration(builder);
 
-			ConfigurationParser parser = new();
-
 			IConfiguration config = builder.Build();
-			string returnHtml = parser.DisplayConfig(config);
+			
+			APIInfoBase apiInfoBase = new();
+			ConfigurationParser parser = new(config,apiInfoBase);
+
+			string returnHtml = parser.DisplayConfig();
 			SimpleRetrieverHostInfo hostInfo = new SimpleRetrieverHostInfo();
 
 

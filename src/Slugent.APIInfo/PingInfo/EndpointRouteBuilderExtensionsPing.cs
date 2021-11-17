@@ -27,7 +27,7 @@ namespace SlugEnt.APIInfo
         {
             if (endpoints == null) throw new ArgumentNullException(nameof(endpoints));
             
-            APIInfoBase apiInfoBase = endpoints.ServiceProvider.GetRequiredService<APIInfoBase>();
+            IAPIInfoBase apiInfoBase = endpoints.ServiceProvider.GetRequiredService<IAPIInfoBase>();
             string urlPattern = apiInfoBase.InfoRootPath + "/ping";
 
             var options = new EndpointPingConfig();
