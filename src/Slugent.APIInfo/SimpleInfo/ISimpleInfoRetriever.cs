@@ -28,7 +28,7 @@ namespace SlugEnt.APIInfo
 		/// Provider called to retrieve the HTML Data.
 		/// </summary>
 		/// <returns></returns>
-		public string ProvideHTML ();
+		public StringBuilder ProvideHTML ();
 
 
 		/// <summary>

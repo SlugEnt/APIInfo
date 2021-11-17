@@ -46,19 +46,37 @@ namespace SlugEnt.APIInfo
 		}
 
 
+
+		/// <summary>
+		/// Returns the Style element that needs to be placed into the header so the table is formatted correctly.
+		/// </summary>
+		/// <returns></returns>
+		public static string GetHTMLStyle () {
+			string styleHTML = @"
+<style>
+table {
+border-spacing: 25px;
+}
+</style>
+";
+			return styleHTML;
+		}
+
+
+
 		/// <summary>
 		/// Returns the data as an HTML string.  This method must be override if the derived class wishes to provide customized HTML
 		/// </summary>
 		/// <returns></returns>
 		/// <exception cref="ArgumentException"></exception>
-		public virtual string ProvideHTML()
+		public StringBuilder ProvideHTML()
 		{
 			string className = this.GetType().FullName;
 
 			GatherData();
 
 			// Now format as HTML
-			string html = ToHtmlTable(_results);
+			StringBuilder html = ToHtmlTable(_results);
 			return html;
 		}
 
@@ -80,7 +98,7 @@ namespace SlugEnt.APIInfo
 		/// <typeparam name="T"></typeparam>
 		/// <param name="enums"></param>
 		/// <returns></returns>
-		protected string ToHtmlTable<T>(IEnumerable<T> enums)
+		protected StringBuilder ToHtmlTable<T>(IEnumerable<T> enums)
 		{
 			var type = typeof(T);
 			var props = type.GetProperties();
@@ -89,19 +107,7 @@ namespace SlugEnt.APIInfo
 			// Set CSS
 			StringBuilder html = new StringBuilder();
 			
-			string header = @"
-<html>
-<head>
-<style>
-table {
-  
-  border-spacing: 25px;
-}
-</style>
-</head>
-<body>
-";
-			html.Append(header);
+			//html.Append(header);
 
 			html.Append("<h1>" + Title + "</h1>");
 
@@ -113,11 +119,12 @@ table {
 			if ( props.Length == 2 ) 
 				html.Append("<th>Item</th><th>Value</th>");
 			else if ( props.Length == 1 ) html.Append("<th>Item</th>");
-/* Do not delete - good example for converting lists, etc to tables
-			foreach (var p in props)
-				html.Append("<th>" + p.Name + "</th>");
+			/* Do not delete - good example for converting lists, etc to tables
+						foreach (var p in props)
+							html.Append("<th>" + p.Name + "</th>");
+						html.Append("</tr></thead>");
+			*/
 			html.Append("</tr></thead>");
-*/
 
 			//Body
 			html.Append("<tbody>");
@@ -128,19 +135,15 @@ table {
 					html.Append("<td>" + p + "</td>");
 				});
 				html.Append("</tr>");
+
 			}
 
-			string ending = @"
-</tbody>
-</table>
-</body>
-</html>
-";
-			html.Append(ending);
-			return html.ToString();
+			html.Append("</tbody></table>");
+			//html.Append(ending);
+			return html;
 		}
 
-		internal abstract void GatherData ();
+		protected abstract void GatherData ();
 	}
 
 }

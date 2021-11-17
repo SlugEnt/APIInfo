@@ -19,18 +19,6 @@ namespace SlugEnt.APIInfo
 		private short _hiddenConfigKeys = 0;
 
 		private short _hiddenConfigSections = 0;
-/*
-		/// <summary>
-		/// The Configuration object from application startup
-		/// </summary>
-		public IConfiguration Configuration { get; set; }
-
-
-		/// <summary>
-		/// The APIInfoBase object from application startup
-		/// </summary>
-		public IAPIInfoBase APIInfoBase { get; set; }
-*/
 
 
 		/// <summary>
@@ -50,11 +38,7 @@ namespace SlugEnt.APIInfo
 		/// <returns></returns>
 		internal string DisplayConfig()
 		{
-			//_configRoot = config as IConfigurationRoot;
-			
-			
 			RecurseChildren(_configRoot.GetChildren());
-			//RecurseChildren(_configRoot.GetChildren());
 
 			StringBuilder finalHtml = new StringBuilder(_htmlStringBuilder.Length + 300);
 			string header = @"
@@ -104,9 +88,6 @@ table {
 						_hiddenConfigSections++;
 					else
 						_hiddenConfigKeys++;
-
-//					_htmlStringBuilder.Append("<pre>" + HIDDEN + "</pre>");
-//					continue;
 					hideChild = true;
 				}
 

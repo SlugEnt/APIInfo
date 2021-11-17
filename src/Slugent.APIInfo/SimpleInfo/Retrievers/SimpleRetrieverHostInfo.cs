@@ -33,7 +33,7 @@ namespace SlugEnt.APIInfo
 		/// <summary>
 		/// Retrieves all the data we provide.
 		/// </summary>
-		internal override void GatherData () {
+		protected override void GatherData () {
 			_results.Add("Hostname",GetHostName());
 
 			List<IPAddress> ipAddresses = GetIPAddresses();

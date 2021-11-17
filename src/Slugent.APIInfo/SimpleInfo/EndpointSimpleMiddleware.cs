@@ -29,15 +29,30 @@ namespace SlugEnt.APIInfo
 		/// <param name="httpContext">The <see cref="HttpContext"/> for the current request.</param>
 		public async Task InvokeAsync(HttpContext httpContext, IEnumerable<ISimpleInfoRetriever> simpleRetrievers)
 		{
-			StringBuilder sb = new StringBuilder();
+			
+			StringBuilder sb = new StringBuilder(4096);
 
 			// Get the retrievers in sorted order:
 			IEnumerable<ISimpleInfoRetriever> sorted = simpleRetrievers.OrderBy(ISimpleInfoRetriever => ISimpleInfoRetriever.SortedOrderValue)
 			                                                           .ThenBy(ISimpleInfoRetriever => ISimpleInfoRetriever.Title);
+
+			// Create the HTML Page start and header.
+			sb.Append("<html><head>");
+			sb.Append(SimpleRetrieverAbstract.GetHTMLStyle());
+			sb.Append("</head><body>");
+
+
+			string ending = @"
+</body>
+</html>
+";
 			foreach ( ISimpleInfoRetriever retriever in sorted ) {
 				sb.Append(retriever.ProvideHTML());
 			}
-			await httpContext.Response.WriteAsync(sb.ToString());
+
+			sb.Append(ending);
+			string html = sb.ToString();
+			await httpContext.Response.WriteAsync(html);
 		}
 	}
 }
