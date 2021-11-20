@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using SlugEnt.APIInfo;
 
 namespace SlugEnt.APIInfo
 {
@@ -17,7 +15,6 @@ namespace SlugEnt.APIInfo
         /// Adds a configuration endpoint to the <see cref="IEndpointRouteBuilder"/> for the ping info.
         /// </summary>
         /// <param name="endpoints">The <see cref="IEndpointRouteBuilder"/> to add endpoint to.</param>
-        /// <param name="pattern">The URL pattern of the endpoint.</param>
         /// <param name="optionsDelegate">The EndpointPingConfig object</param>
         /// <returns>A route for the endpoint.</returns>
         public static IEndpointConventionBuilder? MapSlugEntPing(
@@ -48,7 +45,6 @@ namespace SlugEnt.APIInfo
             IEndpointRouteBuilder endpoints,
             string pattern, EndpointPingConfig options)
         {
-            var environment = endpoints.ServiceProvider.GetRequiredService<IHostEnvironment>();
             var builder = endpoints.CreateApplicationBuilder();
 
             if (!options.Enabled )

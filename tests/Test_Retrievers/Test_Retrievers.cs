@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using Microsoft.Extensions.Hosting;
 using NUnit.Framework;
 using SlugEnt.APIInfo;
 
@@ -18,7 +15,7 @@ namespace Test_Retrievers
 
 		[Test]
 		public void SimpleInfoHost() {
-			SimpleRetrieverHostInfo hostInfo = new SimpleRetrieverHostInfo();
+			SimpleRetrieverHostInfo hostInfo = new();
 			hostInfo.ProvideDictionary();
 			Assert.AreEqual(2,hostInfo.Results.Count, "A10: Dictionary has incorrect number of items");
 			

@@ -7,7 +7,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SlugEnt.APIInfo", "Slugent.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.APIInfo", "Sample.APIInfo\Sample.APIInfo.csproj", "{130D3EFA-5139-4A30-8C02-AD1A0F31A401}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test_Retrievers", "..\tests\Test_Retrievers\Test_Retrievers.csproj", "{D165422A-9D5C-46DA-B2DE-7F5730202943}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test_Retrievers", "..\tests\Test_Retrievers\Test_Retrievers.csproj", "{D165422A-9D5C-46DA-B2DE-7F5730202943}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{11F57CF1-9754-4BC8-9752-94B9C9FD3CFC}"
+	ProjectSection(SolutionItems) = preProject
+		..\README.md = ..\README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

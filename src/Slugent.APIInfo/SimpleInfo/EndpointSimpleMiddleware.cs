@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 
 
 namespace SlugEnt.APIInfo
@@ -27,10 +23,11 @@ namespace SlugEnt.APIInfo
 		/// Executes the middleware that provides configuration-debug-view page.
 		/// </summary>
 		/// <param name="httpContext">The <see cref="HttpContext"/> for the current request.</param>
+		/// <param name="simpleRetrievers">List of simple retriever objects that will be used to build the /simple page</param>
 		public async Task InvokeAsync(HttpContext httpContext, IEnumerable<ISimpleInfoRetriever> simpleRetrievers)
 		{
 			
-			StringBuilder sb = new StringBuilder(4096);
+			StringBuilder sb = new(4096);
 
 			// Get the retrievers in sorted order:
 			IEnumerable<ISimpleInfoRetriever> sorted = simpleRetrievers.OrderBy(ISimpleInfoRetriever => ISimpleInfoRetriever.SortedOrderValue)

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
 using SlugEnt.APIInfo;
@@ -23,7 +19,7 @@ namespace Test_Retrievers
 			// We hard code some configuration data:
 			//  - Change Management Actuator endpoint to Info
 			//  - Remove sensitive environment variables from the display.
-			Dictionary<string, string> customConfig = new Dictionary<string, string>()
+			Dictionary<string, string> customConfig = new()
 			{
 				{"AppA:ChildAA:valueA", "abcdef" },
 				{"AppA:ChildAA:valueB","xyz222"},
@@ -42,7 +38,7 @@ namespace Test_Retrievers
 			// We hard code some configuration data:
 			//  - Change Management Actuator endpoint to Info
 			//  - Remove sensitive environment variables from the display.
-			Dictionary<string, string> customConfig = new Dictionary<string, string>()
+			Dictionary<string, string> customConfig = new()
 			{
 				{"AppA:ChildAB:valueC","xyz6"},
 				{"AppB:ChildBA:ChildBAA:ChildBAAA:ValueE","Ooops - just one E"},
@@ -55,7 +51,7 @@ namespace Test_Retrievers
 
 		[Test]
 		public void NoOverrides() {
-			ConfigurationBuilder builder = new ConfigurationBuilder();
+			ConfigurationBuilder builder = new();
 
 			SetupConfiguration(builder);
 			OverrideConfiguration(builder);
@@ -66,7 +62,7 @@ namespace Test_Retrievers
 			ConfigurationParser parser = new(config,apiInfoBase);
 
 			string returnHtml = parser.DisplayConfig();
-			SimpleRetrieverHostInfo hostInfo = new SimpleRetrieverHostInfo();
+			SimpleRetrieverHostInfo hostInfo = new();
 
 
 			hostInfo.ProvideDictionary();

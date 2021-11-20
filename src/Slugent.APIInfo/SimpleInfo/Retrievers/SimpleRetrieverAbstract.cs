@@ -2,19 +2,27 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 [assembly: InternalsVisibleTo("Test.APIInfo")]
 
 namespace SlugEnt.APIInfo
 {
+	/// <summary>
+	/// Abstract class that defines the core functionality for a SimpleRetriever.  A SimpleRetriever is a class that collects information that should be
+	/// displayed on the /simple page.
+	/// </summary>
 	public abstract class SimpleRetrieverAbstract
 	{
+		/// <summary>
+		/// Dictionary that is used to build the page from.  The SimpleRetriever places the final displayable data elements in this dictionary.
+		/// </summary>
 		protected Dictionary<string, string> _results = new();
 
+
+		/// <summary>
+		/// Public view of the Results dictionary.
+		/// </summary>
 		public Dictionary<string,string> Results { get { return _results; } }
 
 
@@ -39,7 +47,8 @@ namespace SlugEnt.APIInfo
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		/// <param name="title"></param>
+		/// <param name="title">The title for this SimpleRetriever.</param>
+		/// <param name="sortValue">Indicates where in the entire list of SimpleRetrievers this one should be displayed in</param>
 		public SimpleRetrieverAbstract (string title, short sortValue) { 
 			Title = title;
 			SortedOrderValue = sortValue;
@@ -71,8 +80,6 @@ border-spacing: 25px;
 		/// <exception cref="ArgumentException"></exception>
 		public StringBuilder ProvideHTML()
 		{
-			string className = this.GetType().FullName;
-
 			GatherData();
 
 			// Now format as HTML
@@ -105,7 +112,7 @@ border-spacing: 25px;
 
 
 			// Set CSS
-			StringBuilder html = new StringBuilder();
+			StringBuilder html = new();
 			
 			//html.Append(header);
 
@@ -143,6 +150,10 @@ border-spacing: 25px;
 			return html;
 		}
 
+
+		/// <summary>
+		/// Method used to gather data for the SimpleRetriever
+		/// </summary>
 		protected abstract void GatherData ();
 	}
 

@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Permissions;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SlugEnt.APIInfo
+﻿namespace SlugEnt.APIInfo
 {
 	/// <summary>
 	/// Represents a set of text to be matched against and indicates criteria for the match to be compared against, included exact text and matching case.

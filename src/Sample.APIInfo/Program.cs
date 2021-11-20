@@ -1,11 +1,5 @@
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using SlugEnt.APIInfo;
 
@@ -23,9 +17,9 @@ namespace Sample.APIInfo
 			    .ConfigureServices((hostContext, services) => {
 					// Set APIInfo Object and override the default root path to infotest...
 					APIInfoBase apiInfoBase = new ("infotest");
-					apiInfoBase.AddConfigMatchCriteria("password",false,true);
-					apiInfoBase.AddConfigMatchCriteria("os", false, true);
-					apiInfoBase.AddConfigMatchCriteria("LogLevel", true, true);
+					apiInfoBase.AddConfigMatchCriteria("password");
+					apiInfoBase.AddConfigMatchCriteria("os");
+					apiInfoBase.AddConfigMatchCriteria("LogLevel", true);
 					apiInfoBase.AddConfigMatchCriteria("environment", false, false);
 
 					services.AddSingleton<IAPIInfoBase>(apiInfoBase);
