@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Slugent.APIInfo\Slugent.APIInfo.csproj" />
+    <ProjectReference Include="..\..\src\Slugent.APIInfo\SlugEnt.APIInfo.csproj" />
   </ItemGroup>
 
 </Project>

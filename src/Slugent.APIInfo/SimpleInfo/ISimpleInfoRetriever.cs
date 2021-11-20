@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace Slugent.APIInfo.SimpleInfo
+namespace SlugEnt.APIInfo
 {
+	/// <summary>
+	/// Interface for a Simple Retriever object, which is used to display information on the /simple page
+	/// </summary>
 	public interface ISimpleInfoRetriever {
 		/// <summary>
 		/// If the class is able to provide formatted html of its data.
@@ -28,7 +28,7 @@ namespace Slugent.APIInfo.SimpleInfo
 		/// Provider called to retrieve the HTML Data.
 		/// </summary>
 		/// <returns></returns>
-		public string ProvideHTML ();
+		public StringBuilder ProvideHTML ();
 
 
 		/// <summary>

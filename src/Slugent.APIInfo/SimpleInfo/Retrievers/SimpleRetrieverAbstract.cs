@@ -2,19 +2,27 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 [assembly: InternalsVisibleTo("Test.APIInfo")]
 
-namespace Slugent.APIInfo.SimpleInfo.Retrievers
+namespace SlugEnt.APIInfo
 {
+	/// <summary>
+	/// Abstract class that defines the core functionality for a SimpleRetriever.  A SimpleRetriever is a class that collects information that should be
+	/// displayed on the /simple page.
+	/// </summary>
 	public abstract class SimpleRetrieverAbstract
 	{
+		/// <summary>
+		/// Dictionary that is used to build the page from.  The SimpleRetriever places the final displayable data elements in this dictionary.
+		/// </summary>
 		protected Dictionary<string, string> _results = new();
 
+
+		/// <summary>
+		/// Public view of the Results dictionary.
+		/// </summary>
 		public Dictionary<string,string> Results { get { return _results; } }
 
 
@@ -39,11 +47,30 @@ namespace Slugent.APIInfo.SimpleInfo.Retrievers
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		/// <param name="title"></param>
+		/// <param name="title">The title for this SimpleRetriever.</param>
+		/// <param name="sortValue">Indicates where in the entire list of SimpleRetrievers this one should be displayed in</param>
 		public SimpleRetrieverAbstract (string title, short sortValue) { 
 			Title = title;
 			SortedOrderValue = sortValue;
 		}
+
+
+
+		/// <summary>
+		/// Returns the Style element that needs to be placed into the header so the table is formatted correctly.
+		/// </summary>
+		/// <returns></returns>
+		public static string GetHTMLStyle () {
+			string styleHTML = @"
+<style>
+table {
+border-spacing: 25px;
+}
+</style>
+";
+			return styleHTML;
+		}
+
 
 
 		/// <summary>
@@ -51,14 +78,12 @@ namespace Slugent.APIInfo.SimpleInfo.Retrievers
 		/// </summary>
 		/// <returns></returns>
 		/// <exception cref="ArgumentException"></exception>
-		public virtual string ProvideHTML()
+		public StringBuilder ProvideHTML()
 		{
-			string className = this.GetType().FullName;
-
 			GatherData();
 
 			// Now format as HTML
-			string html = ToHtmlTable(_results);
+			StringBuilder html = ToHtmlTable(_results);
 			return html;
 		}
 
@@ -80,28 +105,16 @@ namespace Slugent.APIInfo.SimpleInfo.Retrievers
 		/// <typeparam name="T"></typeparam>
 		/// <param name="enums"></param>
 		/// <returns></returns>
-		protected string ToHtmlTable<T>(IEnumerable<T> enums)
+		protected StringBuilder ToHtmlTable<T>(IEnumerable<T> enums)
 		{
 			var type = typeof(T);
 			var props = type.GetProperties();
 
 
 			// Set CSS
-			StringBuilder html = new StringBuilder();
+			StringBuilder html = new();
 			
-			string header = @"
-<html>
-<head>
-<style>
-table {
-  
-  border-spacing: 25px;
-}
-</style>
-</head>
-<body>
-";
-			html.Append(header);
+			//html.Append(header);
 
 			html.Append("<h1>" + Title + "</h1>");
 
@@ -113,11 +126,12 @@ table {
 			if ( props.Length == 2 ) 
 				html.Append("<th>Item</th><th>Value</th>");
 			else if ( props.Length == 1 ) html.Append("<th>Item</th>");
-/* Do not delete - good example for converting lists, etc to tables
-			foreach (var p in props)
-				html.Append("<th>" + p.Name + "</th>");
+			/* Do not delete - good example for converting lists, etc to tables
+						foreach (var p in props)
+							html.Append("<th>" + p.Name + "</th>");
+						html.Append("</tr></thead>");
+			*/
 			html.Append("</tr></thead>");
-*/
 
 			//Body
 			html.Append("<tbody>");
@@ -128,19 +142,19 @@ table {
 					html.Append("<td>" + p + "</td>");
 				});
 				html.Append("</tr>");
+
 			}
 
-			string ending = @"
-</tbody>
-</table>
-</body>
-</html>
-";
-			html.Append(ending);
-			return html.ToString();
+			html.Append("</tbody></table>");
+			//html.Append(ending);
+			return html;
 		}
 
-		internal abstract void GatherData ();
+
+		/// <summary>
+		/// Method used to gather data for the SimpleRetriever
+		/// </summary>
+		protected abstract void GatherData ();
 	}
 
 }

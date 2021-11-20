@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Net;
 using System.Net.NetworkInformation;
-using Slugent.APIInfo.SimpleInfo.Retrievers;
 
 
 
-namespace Slugent.APIInfo.SimpleInfo.Providers
+namespace SlugEnt.APIInfo
 {
 	
 
@@ -17,7 +13,14 @@ namespace Slugent.APIInfo.SimpleInfo.Providers
 	/// Retrieves basic host Information 
 	/// </summary>
 	public class SimpleRetrieverHostInfo : SimpleRetrieverAbstract,ISimpleInfoRetriever {
+		/// <summary>
+		/// Title for this SimpleRetriever
+		/// </summary>
 		public const string TITLE_HOST_INFO = "Host Information";
+
+		/// <summary>
+		/// The relative sort order for this SimpleRetriever
+		/// </summary>
 		public const short SORT_VALUE = 1000;
 		
 
@@ -25,7 +28,6 @@ namespace Slugent.APIInfo.SimpleInfo.Providers
 		/// <summary>
 		/// Constructs a Host Info retriever
 		/// </summary>
-		/// <param name="title"></param>
 		public SimpleRetrieverHostInfo () : base (TITLE_HOST_INFO, SORT_VALUE) { }
 
 
@@ -33,7 +35,7 @@ namespace Slugent.APIInfo.SimpleInfo.Providers
 		/// <summary>
 		/// Retrieves all the data we provide.
 		/// </summary>
-		internal override void GatherData () {
+		protected override void GatherData () {
 			_results.Add("Hostname",GetHostName());
 
 			List<IPAddress> ipAddresses = GetIPAddresses();

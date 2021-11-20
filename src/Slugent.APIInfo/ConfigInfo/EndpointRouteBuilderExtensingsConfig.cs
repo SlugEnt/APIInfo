@@ -1,35 +1,36 @@
-﻿using System;
+﻿
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace SlugEnt.APIInfo
 {
-
-    /// <summary>
-    /// Provides extension methods for <see cref="IEndpointRouteBuilder"/> to add routes.
+	/// <summary>
+    /// Adds extensions for the /Config route
     /// </summary>
     public static partial class EndpointRouteBuilderExtensions
     {
         /// <summary>
-        /// Adds a configuration endpoint to the <see cref="IEndpointRouteBuilder"/> for the ping info.
+        /// Adds the /ping endpoint to the <see cref="IEndpointRouteBuilder"/> for the ping info.
         /// </summary>
         /// <param name="endpoints">The <see cref="IEndpointRouteBuilder"/> to add endpoint to.</param>
-        /// <param name="optionsDelegate">The EndpointSimpleConfig object</param>
+        /// <param name="optionsDelegate">The EndpointPingConfig object</param>
         /// <returns>A route for the endpoint.</returns>
-        public static IEndpointConventionBuilder? MapSlugEntSimpleInfo(
+        public static IEndpointConventionBuilder? MapSlugEntConfig(
             this IEndpointRouteBuilder endpoints,
-            Action<EndpointSimpleConfig>? optionsDelegate = default)
+            //string pattern =  "info/ping",
+            Action<EndpointConfigConfig>? optionsDelegate = default)
         {
             if (endpoints == null) throw new ArgumentNullException(nameof(endpoints));
-            
-            IAPIInfoBase apiInfoBase = endpoints.ServiceProvider.GetRequiredService<IAPIInfoBase>();
-            string urlPattern = apiInfoBase.InfoRootPath + "/simple";
 
-            var options = new EndpointSimpleConfig();
+            IAPIInfoBase apiInfoBase = endpoints.ServiceProvider.GetRequiredService<IAPIInfoBase>();
+            string urlPattern = apiInfoBase.InfoRootPath + "/config";
+
+            var options = new EndpointConfigConfig();
             optionsDelegate?.Invoke(options);
 
-            return MapSimpleInfoCore(endpoints, urlPattern, options);
+            return MapConfigCore(endpoints, urlPattern, options);
         }
 
 
@@ -40,18 +41,19 @@ namespace SlugEnt.APIInfo
         /// <param name="pattern">The URL Pattern the endpoint is at</param>
         /// <param name="options">The options for the endpoint</param>
         /// <returns></returns>
-        private static IEndpointConventionBuilder? MapSimpleInfoCore(
+        private static IEndpointConventionBuilder? MapConfigCore(
             IEndpointRouteBuilder endpoints,
-            string pattern, EndpointSimpleConfig options)
+            string pattern, EndpointConfigConfig options)
         {
-	        var builder = endpoints.CreateApplicationBuilder();
+            
+            var builder = endpoints.CreateApplicationBuilder();
 
-            if (!options.Enabled )
+            if (!options.Enabled)
             {
                 return null;
             }
             var pipeline = builder
-                .UseMiddleware<EndpointSimpleMiddleware>()
+                .UseMiddleware<EndpointConfigMiddleware>()
                 .Build();
 
             return endpoints.Map(pattern, pipeline);

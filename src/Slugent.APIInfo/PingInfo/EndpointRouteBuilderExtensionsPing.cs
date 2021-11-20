@@ -2,32 +2,29 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Slugent.APIInfo;
 
-namespace Slugent.APIInfo.PingInfo
+namespace SlugEnt.APIInfo
 {
 
     /// <summary>
     /// Provides extension methods for <see cref="IEndpointRouteBuilder"/> to add routes.
     /// </summary>
-    public static class EndpointRouteBuilderExtensions
+    public static partial class EndpointRouteBuilderExtensions
     {
         /// <summary>
         /// Adds a configuration endpoint to the <see cref="IEndpointRouteBuilder"/> for the ping info.
         /// </summary>
         /// <param name="endpoints">The <see cref="IEndpointRouteBuilder"/> to add endpoint to.</param>
-        /// <param name="pattern">The URL pattern of the endpoint.</param>
         /// <param name="optionsDelegate">The EndpointPingConfig object</param>
         /// <returns>A route for the endpoint.</returns>
-        public static IEndpointConventionBuilder? MapPing(
+        public static IEndpointConventionBuilder? MapSlugEntPing(
             this IEndpointRouteBuilder endpoints,
             //string pattern =  "info/ping",
             Action<EndpointPingConfig>? optionsDelegate = default)
         {
             if (endpoints == null) throw new ArgumentNullException(nameof(endpoints));
             
-            APIInfoBase apiInfoBase = endpoints.ServiceProvider.GetRequiredService<APIInfoBase>();
+            IAPIInfoBase apiInfoBase = endpoints.ServiceProvider.GetRequiredService<IAPIInfoBase>();
             string urlPattern = apiInfoBase.InfoRootPath + "/ping";
 
             var options = new EndpointPingConfig();
@@ -48,7 +45,6 @@ namespace Slugent.APIInfo.PingInfo
             IEndpointRouteBuilder endpoints,
             string pattern, EndpointPingConfig options)
         {
-            var environment = endpoints.ServiceProvider.GetRequiredService<IHostEnvironment>();
             var builder = endpoints.CreateApplicationBuilder();
 
             if (!options.Enabled )

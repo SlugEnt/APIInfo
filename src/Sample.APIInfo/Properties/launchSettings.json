@@ -9,18 +9,10 @@
     }
   },
   "profiles": {
-    "IIS Express": {
-      "commandName": "IISExpress",
-      "launchBrowser": true,
-      "launchUrl": "swagger",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
     "Sample.APIInfo": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "infotest/simple",
+      "launchUrl": "infotest/Config",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
