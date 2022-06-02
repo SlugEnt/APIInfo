@@ -19,7 +19,6 @@ namespace SlugEnt.APIInfo
         /// <returns>A route for the endpoint.</returns>
         public static IEndpointConventionBuilder? MapSlugEntConfig(
             this IEndpointRouteBuilder endpoints,
-            //string pattern =  "info/ping",
             Action<EndpointConfigConfig>? optionsDelegate = default)
         {
             if (endpoints == null) throw new ArgumentNullException(nameof(endpoints));

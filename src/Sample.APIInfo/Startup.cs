@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using SlugEnt.APIInfo;
+using SlugEnt.APIInfo.HealthInfo;
 
 
 namespace Sample.APIInfo
@@ -21,7 +23,6 @@ namespace Sample.APIInfo
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
-
 			services.AddControllers();
 			services.AddSwaggerGen(c =>
 			{
@@ -52,7 +53,27 @@ namespace Sample.APIInfo
 				endpoints.MapSlugEntPing();
 				endpoints.MapSlugEntSimpleInfo();
 				endpoints.MapSlugEntConfig();
+				endpoints.MapSlugEntHealth(HealthEndPointConfig);
 			});
+
+
+			HealthCheckProcessor healthCheckProcessor = app.ApplicationServices.GetService<HealthCheckProcessor>();
+
+			// Setup Health Check System
+			//HealthCheckProcessor healthCheckProcessor = new HealthCheckProcessor((Microsoft.Extensions.Logging.ILogger)Log.Logger);
+			ILogger<HealthCheckerFileSystem> hcfs = app.ApplicationServices.GetService<ILogger<HealthCheckerFileSystem>>();
+			HealthCheckerFileSystem fileSystemA = new HealthCheckerFileSystem(hcfs,"Temp Folder", @"C:\temp", true, true);
+			HealthCheckerFileSystem fileSystemB = new HealthCheckerFileSystem(hcfs,"Windows Folder", @"C:\windows", true, false);
+			healthCheckProcessor.AddCheckItem(fileSystemA);
+			healthCheckProcessor.AddCheckItem(fileSystemB);
+
 		}
+
+
+		public void HealthEndPointConfig(EndpointHealthConfig config)
+		{
+			config.Enabled = true;
+		}
+
 	}
 }

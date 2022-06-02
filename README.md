@@ -9,11 +9,16 @@ public static IHostBuilder CreateHostBuilder(string[] args) =>
 	Host.CreateDefaultBuilder(args)
 		.ConfigureServices((hostContext, services) => {
 			// Set APIInfo Object and override the default root path to infotest...
+			// You typically would not override the default, this just shows you can.
 			APIInfoBase apiInfoBase = new ("infotest");
-			apiInfoBase.AddConfigMatchCriteria("password",false,true);
-			apiInfoBase.AddConfigMatchCriteria("os", false, true);
-			apiInfoBase.AddConfigMatchCriteria("LogLevel", true, true);
-			apiInfoBase.AddConfigMatchCriteria("environment", false, false);
+			apiInfoBase.AddConfigHideCriteria("password");
+			apiInfoBase.AddConfigHideCriteria("os");
+			apiInfoBase.AddConfigHideCriteria("urls",false,false);
+			apiInfoBase.AddConfigHideCriteria("LogLevel", true);
+			apiInfoBase.AddConfigHideCriteria("environment", false, false);
+
+			// Override and allow one URLS entry to display.  Note, these are exact match and case sensitive
+			apiInfoBase.AddConfigOverrideString("ASPNETCORE_URLS");
 
 			services.AddSingleton<IAPIInfoBase>(apiInfoBase);
 
@@ -21,7 +26,7 @@ public static IHostBuilder CreateHostBuilder(string[] args) =>
 			services.AddTransient<ISimpleInfoRetriever, SimpleRetrieverHostInfo>();
 ```
 
-The APIInfoBase object is required as is the services.AddSingleton<IAPIInfoBase>(apiInfoBase) line.  The AddConfigMatchCriteria is an optional piece discussed later.
+The APIInfoBase object is required as is the services.AddSingleton<IAPIInfoBase>(apiInfoBase) line.  The AddConfigHideCriteria is an optional piece discussed later.
 
 
 The startup.cs file needs the following additions:

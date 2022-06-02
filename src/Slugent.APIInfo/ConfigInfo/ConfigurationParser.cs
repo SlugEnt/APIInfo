@@ -5,8 +5,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace SlugEnt.APIInfo {
 	/// <summary>
-	///  This class evaluates all the IConfiguration items from the Microsoft Configuration object and formats it into an HTML
-	///  output.
+	///  This class evaluates all the IConfiguration items from the Microsoft Configuration object and formats it into an HTML output.
 	///  <para>
 	///   It sorts the configuration objects by name with the exception that childen values that are also parents of other
 	///   values are listed first then children that are just values.
@@ -89,8 +88,7 @@ table {
 		/// </summary>
 		/// <param name="children">The configuration section to parse into</param>
 		/// <param name="hideValue">
-		///  If true, then all config values, all config sections and all children keys will have their
-		///  value hidden
+		///  If true, then all config values, all config sections and all children keys will have their value hidden
 		/// </param>
 		internal void RecurseChildren (IEnumerable<IConfigurationSection> children, bool hideValue = false) {
 			_indentLevel++;
@@ -106,7 +104,7 @@ table {
 
 
 				// Need to go thru the config criteria we want to hide to see if the child matches.  If it does we skip it - including if it is a section match...
-				if ( hideValue || _apiInfoBase.DoesConfigEntryMatch(child.Key) ) {
+				if ( hideValue || !_apiInfoBase.ShouldShowConfigKeyWord(child.Key) ) {
 					if ( childStack.Count == 0 )
 						_hiddenConfigSections++;
 					else
