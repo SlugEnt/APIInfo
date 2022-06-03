@@ -27,7 +27,7 @@ namespace SlugEnt.APIInfo.HealthInfo
 		public async Task InvokeAsync(HttpContext httpContext)
 		{
 			// TODO this is where the code for health check goes
-			StringBuilder sb =  _healthCheckProcessor.Display();
+			StringBuilder sb =  _healthCheckProcessor.DisplayFull();
 			await httpContext.Response.WriteAsync(sb.ToString());
 		}
 	}

@@ -54,12 +54,21 @@ namespace SlugEnt.APIInfo.HealthInfo
 			sb.Append("<p>FilePath: " + FileSystemConfig.FolderPath + "</p>");
 
 			string message = "";
+
 			sb.Append("<p>Is Readable Check: ");
 			if ( FileSystemConfig.CheckIsReadable )
 				sb.Append(_statusRead.ToString());
 			else
 				sb.Append(" Not Requested");
 			sb.Append("</p>");
+
+			sb.Append("<p>Is Writeable Check: ");
+			if (FileSystemConfig.CheckIsWriteble)
+				sb.Append(_statusWrite.ToString());
+			else
+				sb.Append(" Not Requested");
+			sb.Append("</p>");
+
 		}
 
 

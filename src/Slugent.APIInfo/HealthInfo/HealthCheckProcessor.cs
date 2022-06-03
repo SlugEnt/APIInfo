@@ -83,7 +83,12 @@ namespace SlugEnt.APIInfo.HealthInfo
 		}
 
 
-		public StringBuilder Display () {
+
+		/// <summary>
+		/// Displays the health of all Health Checkers
+		/// </summary>
+		/// <returns></returns>
+		public StringBuilder DisplayFull () {
 			StringBuilder sb = new StringBuilder(2048);
 			sb.Append("<html>");
 			foreach ( IHealthChecker healthChecker in _healthCheckerList ) {
@@ -91,8 +96,8 @@ namespace SlugEnt.APIInfo.HealthInfo
 				if ( healthChecker.Status == EnumHealthStatus.Healthy ) color = "green";
 				else if ( healthChecker.Status == EnumHealthStatus.Degraded ) color = "orange";
 				else if ( healthChecker.Status == EnumHealthStatus.Failed ) color = "red";
-
-				sb.Append("<H2 style=\"color:" + color + ";\">" + healthChecker.CheckerName + ": " + healthChecker.Name + "  Status: [" + healthChecker.Status.ToString() + "]");
+				sb.Append("<hr style=\"width: 50 %; text - align:left; margin - left:0\">");
+				sb.Append("<H2 style=\"color:" + color + ";\">" + healthChecker.CheckerName + ":   " + healthChecker.Name + "    [" + healthChecker.Status.ToString() + "]</H2>");
 				healthChecker.DisplayHTML(sb);
 			}
 
