@@ -20,8 +20,9 @@ namespace SlugEnt.APIInfo.HealthInfo
 		/// <param name="optionsDelegate">The EndpointHealthConfig object</param>
 		/// <returns>A route for the endpoint.</returns>
 		public static IEndpointConventionBuilder? MapSlugEntHealth(
-			this IEndpointRouteBuilder endpoints,
-			Action<EndpointHealthConfig>? optionsDelegate = default)
+			this IEndpointRouteBuilder endpoints)
+				
+			//Action<EndpointHealthConfig>? optionsDelegate = default)
 		{
 			if (endpoints == null) throw new ArgumentNullException(nameof(endpoints));
 
@@ -29,10 +30,11 @@ namespace SlugEnt.APIInfo.HealthInfo
 			IAPIInfoBase apiInfoBase = endpoints.ServiceProvider.GetRequiredService<IAPIInfoBase>();
 			string urlPattern = apiInfoBase.InfoRootPath + "/health";
 
-			var options = new EndpointHealthConfig();
-			optionsDelegate?.Invoke(options);
+//			var options = new EndpointHealthConfig();
+//			optionsDelegate?.Invoke(options);
 
-			return MapHealthCore(endpoints, urlPattern, options);
+			//return MapHealthCore(endpoints, urlPattern, options);
+			return MapHealthCore(endpoints, urlPattern);
 		}
 
 
@@ -45,14 +47,15 @@ namespace SlugEnt.APIInfo.HealthInfo
 		/// <returns></returns>
 		private static IEndpointConventionBuilder? MapHealthCore(
 			IEndpointRouteBuilder endpoints,
-			string pattern, EndpointHealthConfig options)
+			string pattern )//, EndpointHealthConfig options)
 		{
 			var builder = endpoints.CreateApplicationBuilder();
 
-			if (!options.Enabled)
+/*			if (!options.Enabled)
 			{
 				return null;
 			}
+*/
 			var pipeline = builder
 			               .UseMiddleware<EndpointHealthMiddleware>()
 			               .Build();
