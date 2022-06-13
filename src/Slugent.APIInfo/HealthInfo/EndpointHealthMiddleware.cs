@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using SlugEnt.ResourceHealthChecker;
 
 namespace SlugEnt.APIInfo.HealthInfo
 {

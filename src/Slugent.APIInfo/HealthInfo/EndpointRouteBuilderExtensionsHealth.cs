@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using SlugEnt.ResourceHealthChecker;
 
 namespace SlugEnt.APIInfo.HealthInfo
 {

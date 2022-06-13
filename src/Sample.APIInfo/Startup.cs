@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using SlugEnt.APIInfo;
 using SlugEnt.APIInfo.HealthInfo;
+using SlugEnt.ResourceHealthChecker;
 
 
 namespace Sample.APIInfo
@@ -57,16 +58,21 @@ namespace Sample.APIInfo
 			});
 
 
-			HealthCheckProcessor healthCheckProcessor = app.ApplicationServices.GetService<HealthCheckProcessor>();
-
 			// Setup Health Check System
-			//HealthCheckProcessor healthCheckProcessor = new HealthCheckProcessor((Microsoft.Extensions.Logging.ILogger)Log.Logger);
+			HealthCheckProcessor healthCheckProcessor = app.ApplicationServices.GetService<HealthCheckProcessor>();
 			ILogger<HealthCheckerFileSystem> hcfs = app.ApplicationServices.GetService<ILogger<HealthCheckerFileSystem>>();
-			HealthCheckerFileSystem fileSystemA = new HealthCheckerFileSystem(hcfs,"Temp Folder", @"C:\temp", true, true);
-			HealthCheckerFileSystem fileSystemB = new HealthCheckerFileSystem(hcfs,"Windows Folder", @"C:\windows", true, false);
+
+			HealthCheckerConfigFileSystem config2 = new HealthCheckerConfigFileSystem()
+			{
+				CheckIsWriteble = true,
+				CheckIsReadable = true,
+				FolderPath = @"C:\temp\HCW",
+			};
+
+			HealthCheckerFileSystem fileSystemA = new HealthCheckerFileSystem(hcfs,"Temp Folder Read", config2);
+			HealthCheckerFileSystem fileSystemB = new HealthCheckerFileSystem(hcfs, "Temp Folder Write", config2);
 			healthCheckProcessor.AddCheckItem(fileSystemA);
 			healthCheckProcessor.AddCheckItem(fileSystemB);
-
 		}
 
 

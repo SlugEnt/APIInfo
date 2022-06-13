@@ -9,6 +9,7 @@ using Serilog.Events;
 using Serilog.Extensions.Logging;
 using SlugEnt.APIInfo;
 using SlugEnt.APIInfo.HealthInfo;
+using SlugEnt.ResourceHealthChecker;
 
 
 namespace Sample.APIInfo
@@ -56,18 +57,12 @@ namespace Sample.APIInfo
 
 
 				    // Start the Health Checks
-
-				    //services.AddSingleton<HealthCheckProcessor>(healthCheckProcessor);
 				    services.AddSingleton<HealthCheckProcessor>();
 
-				    //Console.WriteLine("Startup Health Status: " + healthCheckProcessor.Status.ToString());
 				    services.AddHostedService<APIBackgroundProcessor>();
 			    })
 			    .ConfigureWebHostDefaults(webBuilder => {
 				    webBuilder.UseStartup<Startup>();
 			    });
-
-
-
 	}
 }
