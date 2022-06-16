@@ -261,7 +261,9 @@ namespace SlugEnt.APIInfo.Sample
 		/// </summary>
 		/// <returns></returns>
 		private static APIInfoBase SetupAPIInfoBase () {
-			APIInfoBase apiInfoBase = new("infotest");
+			// This is how you override the api endpoint to something other than info
+			//APIInfoBase apiInfoBase = new("infotest");
+			APIInfoBase apiInfoBase = new();
 			apiInfoBase.AddConfigHideCriteria("password");
 			apiInfoBase.AddConfigHideCriteria("os");
 			apiInfoBase.AddConfigHideCriteria("urls", false, false);

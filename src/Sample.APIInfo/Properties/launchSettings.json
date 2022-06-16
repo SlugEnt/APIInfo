@@ -12,7 +12,7 @@
     "Sample.APIInfo": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "infotest/Health",
+      "launchUrl": "info/Health",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
