@@ -12,9 +12,12 @@
     <RepositoryUrl>https://github.com/SlugEnt/APIInfo</RepositoryUrl>
     <PackageTags>API Information </PackageTags>
     <PackageReleaseNotes>Initial Release</PackageReleaseNotes>
-    <PackageLicenseFile>C:\A_Dev\SlugEnt\APIInfo\LICENSE</PackageLicenseFile>
+    
     <Version>1.1.0</Version>
   </PropertyGroup>
+	<PropertyGroup>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	</PropertyGroup>
 
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
