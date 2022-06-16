@@ -19,16 +19,16 @@
       "IsTestProject": false
     },
     {
-      "Name": "Sample.APIInfo",
-      "Deploy": "None",
-      "HasTypeWriterScripts": false,
-      "IsTestProject": false
-    },
-    {
       "Name": "Test_Retrievers",
       "Deploy": "None",
       "HasTypeWriterScripts": false,
       "IsTestProject": true
+    },
+    {
+      "Name": "APIInfo.Sample",
+      "Deploy": "None",
+      "HasTypeWriterScripts": false,
+      "IsTestProject": false
     }
   ],
   "AngularProjects": []
