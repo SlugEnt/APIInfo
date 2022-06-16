@@ -10,21 +10,24 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using Microsoft.OpenApi.Models;
+using ResourceHealthChecker.SqlServer;
 using Serilog;
 using Serilog.Events;
 using Serilog.Extensions.Logging;
 using SlugEnt.APIInfo;
 using SlugEnt.APIInfo.HealthInfo;
 using SlugEnt.ResourceHealthChecker;
+using SlugEnt.ResourceHealthChecker.SqlServer;
 
 
-namespace Sample.APIInfo
+namespace SlugEnt.APIInfo.Sample
 {
 	/// <summary>
 	/// Main Startup Application
@@ -34,6 +37,7 @@ namespace Sample.APIInfo
 		private static WebApplicationBuilder builder;
 		private static HealthCheckProcessor  healthCheckProcessor;
 		private static Serilog.ILogger       Logger;
+		private static IConfiguration        _configuration;
 
 
 
@@ -55,7 +59,10 @@ namespace Sample.APIInfo
 				Log.Information("Starting " + Assembly.GetEntryAssembly().FullName);
 
 				builder = WebApplication.CreateBuilder(args);
-
+				Logger = Log.Logger;
+				_configuration = builder.Configuration;
+				string y = builder.Configuration ["Logging:LogLevel:Default"];
+				string yy = builder.Configuration ["ConnectionStrings:AdventureDB"];
 				await Setup(args);
 
 
@@ -80,6 +87,9 @@ namespace Sample.APIInfo
 
 			// Initial Settings
 			string corsPolicy = "CustomCors";
+
+			// Get Sensitive Appsettings.json file location
+			string sensitiveAppSettings = Environment.GetEnvironmentVariable("AppSettingSensitiveFolder");
 			
 
 
@@ -89,15 +99,20 @@ namespace Sample.APIInfo
 			DirectoryInfo appRootDirectoryInfo = Directory.GetParent(versionPath);
 			string appRoot = appRootDirectoryInfo.FullName;
 			Console.WriteLine("Running from Directory:  " + appRoot);
-
+			
+			// Load Environment Specific App Setting file
 			string appSettingFileName = $"appsettings." + environment.EnvironmentName + ".json";
 			string appSettingFile = Path.Join(appRoot, appSettingFileName);
-			Console.WriteLine("Looking for " + appSettingFile);
 			builder.Configuration.AddJsonFile(appSettingFile, true);
+			DisplayAppSettingStatus(appSettingFile);
+			
 
+			// Load the Sensitive AppSettings.JSON file.
+			string sensitiveFileName = Assembly.GetExecutingAssembly().GetName().Name + "_AppSettingsSensitive.json";
+			appSettingFile = Path.Join(sensitiveAppSettings, sensitiveFileName);
+			builder.Configuration.AddJsonFile(appSettingFile, true);
+			DisplayAppSettingStatus(appSettingFile);
 
-
-			//CreateHostBuilder(args).Build().Run();
 
 			// 1.C.  Logging in the App
 			builder.Logging.ClearProviders();
@@ -218,7 +233,8 @@ namespace Sample.APIInfo
 			//if ( app.Environment.IsDevelopment() )
 			_app.MapControllers().WithMetadata(new AllowAnonymousAttribute());
 #else
-			app.MapControllers();
+			_app.MapControllers();
+			
 #endif
 
 
@@ -275,50 +291,36 @@ namespace Sample.APIInfo
 				FolderPath = @"C:\temp\HCW",
 			};
 
+
+			// We have 2 file system Checks.  One system is a Read check.  The other is a read write check.
 			HealthCheckerFileSystem fileSystemA = new HealthCheckerFileSystem(hcfs, "Temp Folder Read", config2);
 			HealthCheckerFileSystem fileSystemB = new HealthCheckerFileSystem(hcfs, "Temp Folder Write", config2);
 			healthCheckProcessor.AddCheckItem(fileSystemA);
 			healthCheckProcessor.AddCheckItem(fileSystemB);
 
+
+
+			// We also will have a SQL Server Checker
+			// Note: We are using the default Read and Write Tables for the Health Checker.  You will need to add these to AdventureWorks manually.
+			// The 2 tables are --> SlugEntHealthCheck
+			string adventureWorksConnStr = _configuration ["ConnectionStrings:AdventureDB"];
+			HealthCheckerConfigSQLServer sqlConfig = new(adventureWorksConnStr);
+			ILogger<HealthCheckerSQLServer> hcSQL = _app.Services.GetService<ILogger<HealthCheckerSQLServer>>();
+			HealthCheckerSQLServer sqlCheck = new(hcSQL, "Adventure Works 2020", sqlConfig);
+			healthCheckProcessor.AddCheckItem(sqlCheck);
+
 		}
 
 
-		/*
-
-		public static IHostBuilder CreateHostBuilder (string [] args) =>
-			Host.CreateDefaultBuilder(args)
-			    .UseSerilog()
-			    .ConfigureServices((hostContext, services) => {
-
-
-
-				    // Set APIInfo Object and override the default root path to infotest...
-				    APIInfoBase apiInfoBase = new("infotest");
-				    apiInfoBase.AddConfigHideCriteria("password");
-				    apiInfoBase.AddConfigHideCriteria("os");
-				    apiInfoBase.AddConfigHideCriteria("urls", false, false);
-				    apiInfoBase.AddConfigHideCriteria("LogLevel", true);
-				    apiInfoBase.AddConfigHideCriteria("environment", false, false);
-
-				    // Override and allow one URLS entry to display
-				    apiInfoBase.AddConfigOverrideString("ASPNETCORE_URLS");
-
-				    services.AddSingleton<IAPIInfoBase>(apiInfoBase);
-
-
-				    // Add a SimpleInfo retriever - Host Information
-				    services.AddTransient<ISimpleInfoRetriever, SimpleRetrieverHostInfo>();
-
-
-				    // Start the Health Checks
-				    services.AddSingleton<HealthCheckProcessor>();
-
-				    services.AddHostedService<APIBackgroundProcessor>();
-			    })
-			    .ConfigureWebHostDefaults(webBuilder => {
-				    webBuilder.UseStartup<Startup>();
-			    });
-
-		*/
+		/// <summary>
+		/// Logs whether a given AppSettings file was found to exist.
+		/// </summary>
+		/// <param name="appSettingFileName"></param>
+		private static void DisplayAppSettingStatus (string appSettingFileName) {
+			if (File.Exists(appSettingFileName))
+				Logger.Information("AppSettings File was located.  {AppSettingsFile}", appSettingFileName);
+			else 
+				Logger.Warning("AppSettings File was not found.  {AppSettingsFile}", appSettingFileName);
+		}
 	}
 }

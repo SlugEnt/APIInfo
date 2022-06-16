@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 
 
 namespace SlugEnt.APIInfo
@@ -12,6 +13,7 @@ namespace SlugEnt.APIInfo
 	/// </summary>
 	public class EndpointSimpleMiddleware
 	{
+		
 		/// <summary>
 		/// Initializes a new instance of <see cref="EndpointSimpleMiddleware"/>.
 		/// </summary>

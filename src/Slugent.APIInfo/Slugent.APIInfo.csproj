@@ -13,6 +13,7 @@
     <PackageTags>API Information </PackageTags>
     <PackageReleaseNotes>Initial Release</PackageReleaseNotes>
     <PackageLicenseFile>C:\A_Dev\SlugEnt\APIInfo\LICENSE</PackageLicenseFile>
+    <Version>1.1.0</Version>
   </PropertyGroup>
 
 	<ItemGroup>
@@ -31,7 +32,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
-    <PackageReference Include="SlugEnt.ResourceHealthChecker" Version="1.1.0-alpha-0000" />
+    <PackageReference Include="SlugEnt.ResourceHealthChecker" Version="1.2.0" />
   </ItemGroup>
 
 

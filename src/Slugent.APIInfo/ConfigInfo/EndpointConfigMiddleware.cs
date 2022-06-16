@@ -20,7 +20,7 @@ namespace SlugEnt.APIInfo
 		/// <param name="configuration">IConfiguration object of current config values</param>
 		/// <param name="apiInfoBase">The APIInfoBase object that contains settings we need</param>
 		public EndpointConfigMiddleware (RequestDelegate next, IConfiguration configuration, IAPIInfoBase apiInfoBase) {
-			_configRoot = configuration as ConfigurationRoot;
+			_configRoot = (IConfigurationRoot)configuration;
 			_apiInfoBase = apiInfoBase;
 		}
 
@@ -32,7 +32,8 @@ namespace SlugEnt.APIInfo
  		/// <param name="configuration">IConfiguration object of current config values</param>
 		/// <param name="apiInfoBase">The APIInfoBase object that contains settings we need</param>
 		public async Task InvokeAsync(HttpContext httpContext, IConfiguration configuration, IAPIInfoBase apiInfoBase) {
-			ConfigurationParser parser = new(_configRoot,_apiInfoBase);
+			//	ConfigurationParser parser = new(_configRoot,_apiInfoBase);
+			ConfigurationParser parser = new(configuration, _apiInfoBase);
 			string returnHtml = parser.DisplayConfig();
 			await httpContext.Response.WriteAsync(returnHtml);
 		}
@@ -40,3 +41,4 @@ namespace SlugEnt.APIInfo
 
 	}
 }
+

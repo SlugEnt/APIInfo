@@ -33,7 +33,8 @@ namespace SlugEnt.APIInfo {
 		///  Constructor
 		/// </summary>
 		public ConfigurationParser (IConfiguration configuration, IAPIInfoBase apiInfoBase) {
-			_configRoot = configuration as ConfigurationRoot;
+			//_configRoot = configuration as ConfigurationRoot;
+			_configRoot = (IConfigurationRoot)configuration;
 			_apiInfoBase = apiInfoBase;
 		}
 

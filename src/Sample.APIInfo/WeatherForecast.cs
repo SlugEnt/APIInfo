@@ -1,6 +1,6 @@
 using System;
 
-namespace Sample.APIInfo
+namespace SlugEnt.APIInfo.Sample
 {
 	public class WeatherForecast
 	{

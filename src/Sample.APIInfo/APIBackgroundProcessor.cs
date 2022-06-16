@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using SlugEnt.APIInfo.HealthInfo;
 using SlugEnt.ResourceHealthChecker;
 
-namespace Sample.APIInfo
+namespace SlugEnt.APIInfo.Sample
 {
 	/// <summary>
 	/// Performs backgroun API Health Checks
