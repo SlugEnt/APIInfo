@@ -10,10 +10,10 @@
     <PackageProjectUrl>https://github.com/SlugEnt/APIInfo</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/SlugEnt/APIInfo</RepositoryUrl>
-    <PackageTags>API Information </PackageTags>
-    <PackageReleaseNotes>Initial Release</PackageReleaseNotes>
+    <PackageTags>API Information;Health</PackageTags>
+    <PackageReleaseNotes>Fixed bug</PackageReleaseNotes>
     
-    <Version>1.1.0</Version>
+    <Version>1.2.0-beta-01</Version>
   </PropertyGroup>
 	<PropertyGroup>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -35,7 +35,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
-    <PackageReference Include="SlugEnt.ResourceHealthChecker" Version="1.3.3" />
+    <PackageReference Include="SlugEnt.ResourceHealthChecker" Version="1.3.7" />
   </ItemGroup>
 
 

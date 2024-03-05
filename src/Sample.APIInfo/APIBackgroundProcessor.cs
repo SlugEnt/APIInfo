@@ -81,7 +81,7 @@ namespace SlugEnt.APIInfo.Sample
                 }
 
                 // Sleep for cycle time.
-                await Task.Delay(sleepTime, stoppingToken);
+                //await Task.Delay(sleepTime, stoppingToken);
             }
         }
 

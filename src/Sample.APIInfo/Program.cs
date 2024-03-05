@@ -48,8 +48,8 @@ namespace SlugEnt.APIInfo.Sample
                              .MinimumLevel.Debug()
                              .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
 #else
-						 .MinimumLevel.Information()
-			             .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                             .MinimumLevel.Information()
+                             .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
 #endif
                              .Enrich.FromLogContext()
                              .WriteTo.Console()
@@ -62,6 +62,12 @@ namespace SlugEnt.APIInfo.Sample
                 _configuration = builder.Configuration;
                 string y  = builder.Configuration["Logging:LogLevel:Default"];
                 string yy = builder.Configuration["ConnectionStrings:AdventureDB"];
+
+                //await Setup(args);
+
+//                await Builder();
+                //              await AppSetup();
+
                 await Setup(args);
 
 
@@ -72,6 +78,126 @@ namespace SlugEnt.APIInfo.Sample
             {
                 Logger.Error("Unhandled Exception in the application resulted in application crash.  Exception was: " + ex.ToString());
             }
+        }
+
+
+        public static async Task Builder()
+        {
+            // 1.0 Initial Setup 
+
+
+            // Initial Settings
+            string corsPolicy = "CustomCors";
+
+            // Get Sensitive Appsettings.json file location
+            string sensitiveAppSettings = Environment.GetEnvironmentVariable("AppSettingSensitiveFolder");
+
+
+            // 1.B.  We keep the AppSettings file in the root App folder on the servers so it never gets overwritten
+            IWebHostEnvironment environment          = builder.Environment;
+            string              versionPath          = Directory.GetCurrentDirectory();
+            DirectoryInfo       appRootDirectoryInfo = Directory.GetParent(versionPath);
+            string              appRoot              = appRootDirectoryInfo.FullName;
+            Console.WriteLine("Running from Directory:  " + appRoot);
+
+            // Load Environment Specific App Setting file
+            string appSettingFileName = $"appsettings." + environment.EnvironmentName + ".json";
+            string appSettingFile     = Path.Join(appRoot, appSettingFileName);
+            builder.Configuration.AddJsonFile(appSettingFile, true);
+            DisplayAppSettingStatus(appSettingFile);
+
+
+            // Load the Sensitive AppSettings.JSON file.
+            string sensitiveFileName = Assembly.GetExecutingAssembly().GetName().Name + "_AppSettingsSensitive.json";
+            appSettingFile = Path.Join(sensitiveAppSettings, sensitiveFileName);
+            builder.Configuration.AddJsonFile(appSettingFile, true);
+            DisplayAppSettingStatus(appSettingFile);
+
+
+            // 1.C.  Logging in the App
+            builder.Logging.ClearProviders();
+
+            builder.Logging.AddSerilog(Log.Logger);
+            builder.Host.UseSerilog(Log.Logger);
+
+
+            // 1.D. Print the configuration
+            // There are better ways to do this...
+            var config = builder.Configuration.GetDebugView();
+
+            //System.Console.WriteLine(config);
+
+
+            // 1.E.  Authentication and Authorization
+
+
+            // 1.F.  Database Access
+
+
+            // 1.G.  
+
+
+            // 2.0 Services
+
+            // 2.A - Main API App
+            builder.Services.AddHostedService<APIBackgroundProcessor>();
+
+
+            // 2.B - Setup APIInfo and Health Checks
+            APIInfoBase apiInfoBase = SetupAPIInfoBase();
+            builder.Services.AddSingleton<IAPIInfoBase>(apiInfoBase);
+            builder.Services.AddSingleton<HealthCheckProcessor>();
+
+            builder.Services.AddHostedService<HealthCheckerBackgroundProcessor>();
+
+            // Eventually do something else like single call to add all Healthcheckers
+            builder.Services.AddTransient<IHealthCheckerFileSystem, HealthCheckerFileSystem>();
+            builder.Services.AddTransient<IHealthCheckerSQLServer, HealthCheckerSQLServer>();
+            builder.Services.AddTransient<IHealthCheckerFileSystem, HealthCheckerFileSystem>();
+
+            // Add a SimpleInfo retriever - Host Information
+            builder.Services.AddTransient<ISimpleInfoRetriever, SimpleRetrieverHostInfo>();
+
+
+            // Start the Health Checks
+
+
+            // 2.Z
+
+
+            // 3.0 - API Startup
+
+            // 3.A - Detailed Error Handling
+            builder.Services.AddProblemDetails(options =>
+                   {
+                       options.MapToStatusCode<NotImplementedException>(StatusCodes.Status501NotImplemented);
+                       options.MapToStatusCode<HttpRequestException>(StatusCodes.Status503ServiceUnavailable);
+                       options.MapToStatusCode<Exception>(StatusCodes.Status500InternalServerError);
+                   })
+                   .AddProblemDetailsConventions();
+
+
+            builder.Services.AddControllers();
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+
+            _app = builder.Build();
+        }
+
+
+        public static async Task AppSetup()
+        {
+            if (_app.Environment.IsDevelopment())
+            {
+                _app.UseSwagger();
+                _app.UseSwaggerUI();
+            }
+
+            _app.UseHttpsRedirection();
+
+            _app.UseAuthorization();
+
+            _app.MapControllers();
         }
 
 
@@ -150,9 +276,9 @@ namespace SlugEnt.APIInfo.Sample
             builder.Services.AddHostedService<HealthCheckerBackgroundProcessor>();
 
             // Eventually do something else like single call to add all Healthcheckers
-            builder.Services.AddTransient<IFileSystemHealthChecker, HealthCheckerFileSystem>();
-            builder.Services.AddTransient<ISQLServerHealthChecker, HealthCheckerSQLServer>();
-            builder.Services.AddTransient<IFileSystemHealthChecker, HealthCheckerFileSystem>();
+            builder.Services.AddTransient<IHealthCheckerFileSystem, HealthCheckerFileSystem>();
+            builder.Services.AddTransient<IHealthCheckerSQLServer, HealthCheckerSQLServer>();
+            builder.Services.AddTransient<IHealthCheckerFileSystem, HealthCheckerFileSystem>();
 
             // Add a SimpleInfo retriever - Host Information
             builder.Services.AddTransient<ISimpleInfoRetriever, SimpleRetrieverHostInfo>();
@@ -206,7 +332,7 @@ namespace SlugEnt.APIInfo.Sample
             // 4.0 - App Build and final Setup
             _app = builder.Build();
 
-//            HealthCheckProcessor     hcp                   = _app.Services.GetRequiredService<HealthCheckProcessor>();
+            HealthCheckProcessor hcp = _app.Services.GetRequiredService<HealthCheckProcessor>();
 
             // 4.A - If there is any additional Setup required by the API or instantation of static classes or configuration it should go here.
             _app.UseSerilogRequestLogging();
@@ -248,22 +374,9 @@ namespace SlugEnt.APIInfo.Sample
             //if ( app.Environment.IsDevelopment() )
             _app.MapControllers().WithMetadata(new AllowAnonymousAttribute());
 #else
-			_app.MapControllers();
+            _app.MapControllers();
 
 #endif
-
-
-            // 5. Final Customization logic
-            ConfigHealthChecker();
-            await healthCheckProcessor.Start();
-
-            // Exit if the Health Check has failed on start;
-            EnumHealthStatus healthCheckStatus = healthCheckProcessor.Status;
-            if (healthCheckStatus != EnumHealthStatus.Healthy)
-            {
-                Log.Fatal("Initial Health Startup Status is: " + healthCheckStatus.ToString() + "  Application is being shut down.");
-                return;
-            }
 
 
             Log.Logger.Error("Sample Error.  This is not a real error");
@@ -325,6 +438,9 @@ namespace SlugEnt.APIInfo.Sample
             ILogger<HealthCheckerSQLServer> hcSQL                 = _app.Services.GetService<ILogger<HealthCheckerSQLServer>>();
             HealthCheckerSQLServer          sqlCheck              = new(hcSQL, "Adventure Works 2020", sqlConfig);
             healthCheckProcessor.AddCheckItem(sqlCheck);
+
+            // Disable Sql for now
+            sqlCheck.IsEnabled = false;
         }
 
 
