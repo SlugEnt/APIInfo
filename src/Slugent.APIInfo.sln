@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test_Retrievers", "..\tests
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{11F57CF1-9754-4BC8-9752-94B9C9FD3CFC}"
 	ProjectSection(SolutionItems) = preProject
+		..\Scripts\PushToNuget_Local.cmd = ..\Scripts\PushToNuget_Local.cmd
 		..\README.md = ..\README.md
+		..\Scripts\ReleaseToPublicNuget.cmd = ..\Scripts\ReleaseToPublicNuget.cmd
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SlugEnt.APIInfo", "Slugent.APIInfo\SlugEnt.APIInfo.csproj", "{8C080B10-7C19-483E-B7CB-549D21F09C81}"
