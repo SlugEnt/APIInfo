@@ -13,7 +13,7 @@
     <PackageTags>API Information;Health</PackageTags>
     <PackageReleaseNotes>.Net 8 Upgrade</PackageReleaseNotes>
     
-    <Version>1.3.0.0</Version>
+    <Version>1.8.0.0</Version>
   </PropertyGroup>
 	<PropertyGroup>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -33,12 +33,11 @@
 	  </None>
 	</ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Routing" Version="2.2.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
-    <PackageReference Include="SlugEnt.ResourceHealthChecker" Version="1.4.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.1" />
+    <PackageReference Include="SlugEnt.ResourceHealthChecker" Version="1.8.0" />
   </ItemGroup>
 
 
